@@ -65,8 +65,8 @@ Where id is a parameter in the url corresponding to the id of the task being edi
 	<meta name="description" content="Task Details" />
 </svelte:head>
 
-<div class="flex justify-between items-start border-2 p-4 m-4 rounded-md h-auto bg-white shadow-md">
-	<div class="flex flex-col gap-4">
+<div class="flex justify-center grow items-start border-2 p-4 m-4 mx-48 rounded-md h-auto bg-white shadow-md">
+	<div class="flex flex-col gap-4 grow">
 		<h1 class="text-2xl">Edit {title}</h1>
 		<input class={INPUT_STYLE} type="text" name="taskName" placeholder="Title" bind:value={title} />
 		<textarea
