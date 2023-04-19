@@ -37,7 +37,7 @@
 			id: uuidv4(),
 			taskName: title,
 			taskDescription: description,
-			taskDate: date,
+			taskDate: date
 		};
 
 		// Call to the addStore function passing the newTask as a parameter to save into the store.
@@ -62,10 +62,10 @@
 </script>
 
 <div
-	class="flex justify-between items-start border-2 p-4 rounded-md h-auto bg-white shadow-md w-full"
+	class="flex flex-col justify-start items-center gap-4 border-2 py-4 px-8 rounded-md h-auto bg-white shadow-md w-full"
 >
-	<div class="flex flex-col gap-4">
-		<h1 class="text-2xl">Add a new task</h1>
+	<h1 class="text-2xl self-start">Add a new task</h1>
+	<div class="flex flex-col gap-4 w-full">
 		<input
 			class={`${INPUT_STYLE} mx-2`}
 			type="text"
