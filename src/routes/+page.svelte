@@ -41,10 +41,12 @@ This component shows the 'Add Task' Widget and the 'Tasks list'.
 
 <section>
 	<!-- Flex container containing the AddTask widget and a conditionally rendered TaskList -->
-	<div class="flex flex-col justify-start items-center gap-4 p-12">
+	<div class="flex flex-col justify-start items-center gap-12 p-12">
 		<AddTask />
 		{#if loaded}
-			<TaskList />
+			<div class="w-full grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+				<TaskList />
+			</div>
 		{/if}
 	</div>
 </section>
