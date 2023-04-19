@@ -12,27 +12,28 @@
 	This function is binded to the click event of the delete button.
 	It is used to delete the task from the store and local storage.
 	*/
-	const deleteTask = () => {
+	const deleteTask = (event) => {
+		event.preventDefault();
 		deleteStore(task.id);
 		setStorage($tasks);
 	};
 </script>
 
 <div
-	class="flex justify-between items-center border-2 p-4 rounded-md h-auto bg-white shadow-md cursor-pointer w-full hover:bg-gray-100"
->
-	<div class="flex flex-col gap-4">
+	class="border-2 p-4 rounded-md h-auto bg-white shadow-md w-full hover:bg-gray-100"
+	>
+	<div class="flex flex-col justify-between w-full h-full">
 		<div
-			class="flex flex-col gap-4"
+			class="flex flex-col gap-4 mb-4 w-full h-full cursor-pointer"
 			on:click={() => goto(`/task/${task.id}`)}
 			on:keydown={() => goto(`/task/${task.id}`)}
 		>
 			<h1 class="text-2xl">{task?.taskName}</h1>
 			{#if task?.taskDescription}
-				<p>{task?.taskDescription}</p>
+				<p class="break-words">{task?.taskDescription}</p>
 			{/if}
 			{#if task?.taskDate}
-				<p>{`Due ${task?.taskDate}`}</p>
+				<p class="break-words">{`Due ${task?.taskDate}`}</p>
 			{/if}
 		</div>
 		<div class="flex justify-between">
