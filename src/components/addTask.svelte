@@ -1,16 +1,23 @@
+<!-- The AddTask Widget used to create new tasks -->
 <script type="text/partytown">
-	import { tasks } from '../store/store.js';
 	import { v4 as uuidv4 } from 'uuid';
 
+	import { tasks, addStore } from '../store/store.js';
+	import { setStorage } from '../utils/storage.js';
+
 	const INPUT_STYLE = 'rounded-md p-2';
+
+	/* Task title, description and date binded to the values of the widget inputs. */
 	let title;
 	let description;
 	let date;
 
 	let collapsible;
 
+	/* Reactive variable used to prevent adding an empty task */
 	$: disableSubmit = !title || title === '';
 
+	/* Function used to expand/collapse the AddTask widget. */
 	const expand = () => {
 		collapsible.classList.replace('h-0', 'h-full');
 	};
@@ -19,26 +26,33 @@
 		collapsible.classList.replace('h-full', 'h-0');
 	};
 
+	/*
+	This function is binded to the click event of the add button.
+	The add button is disbaled if the title of the task is empty.
+	The function also returns before excuting if the title is empty in case a user enables the button through the inspection tools in the browser.
+	*/
 	const addTask = () => {
 		if (disableSubmit) return;
-		tasks.update((t) => [
-			{
-				id: uuidv4(),
-				taskName: title,
-				taskDescription: description,
-				taskDate: date,
-				completed: false,
-				creationDate: new Date()
-			},
-			...t
-		]);
-		localStorage.setItem('tasks', JSON.stringify($tasks));
+		let newTask = {
+			id: uuidv4(),
+			taskName: title,
+			taskDescription: description,
+			taskDate: date,
+		};
+
+		// Call to the addStore function passing the newTask as a parameter to save into the store.
+		addStore(newTask);
+
+		// Setting the tasks item in local storage to the value of the updated store.
+		setStorage($tasks);
+
+		collapse();
 		title = null;
 		description = null;
 		date = null;
-		collapse();
 	};
 
+	/* A function to reset all fields and go collapse the widget. */
 	const cancel = () => {
 		collapse();
 		title = null;
@@ -47,7 +61,9 @@
 	};
 </script>
 
-<div class="flex justify-between items-start border-2 p-4 rounded-md h-auto bg-white shadow-md w-full">
+<div
+	class="flex justify-between items-start border-2 p-4 rounded-md h-auto bg-white shadow-md w-full"
+>
 	<div class="flex flex-col gap-4">
 		<h1 class="text-2xl">Add a new task</h1>
 		<input
@@ -58,10 +74,7 @@
 			bind:value={title}
 			on:focus={expand}
 		/>
-		<div
-			class="flex flex-col p-2 gap-4 h-0 overflow-hidden"
-			bind:this={collapsible}
-		>
+		<div class="flex flex-col p-2 gap-4 h-0 overflow-hidden" bind:this={collapsible}>
 			<textarea
 				class={INPUT_STYLE}
 				type="text"

@@ -1,3 +1,4 @@
+<!-- Header component containing an anchor to the main view. -->
 <script>
 	import { page } from '$app/stores';
 

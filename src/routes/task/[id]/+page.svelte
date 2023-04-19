@@ -1,9 +1,16 @@
+<!--
+This is the task editing view.
+It is dynamically routed for each task using the route '/task/[id]'.
+Where id is a parameter in the url corresponding to the id of the task being edited.
+-->
+
 <script type="text/partytown">
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { tasks, editStore, updateStore } from '../../../store/store.js';
 	import { goto } from '$app/navigation';
-	import { getStorage, setStorage } from '../../../utils/worker.js';
+	import { onMount } from 'svelte';
+
+	import { tasks, editStore, updateStore } from '../../../store/store.js';
+	import { getStorage, setStorage } from '../../../utils/storage.js';
 
 	const INPUT_STYLE = 'rounded-md p-2';
 
@@ -15,23 +22,37 @@
 	let date;
 	$: disableSubmit = !title || title === '';
 
+	/* On this components mount the store is synced with local storage again to avoid purging the stores data if the page is reloaded. */
 	onMount(async () => {
 		let storage = getStorage();
 		updateStore(storage);
 
+		// Finding the index of the task being edited in the list of tasks in the store.
 		currTask = $tasks.findIndex((task) => task.id === id);
+
+		// Setting the initial values of the title, description and date variables bounded to the inputs in the view.
 		title = $tasks[currTask]?.taskName;
 		description = $tasks[currTask]?.taskDescription;
 		date = $tasks[currTask]?.taskDate;
 	});
 
+	/*
+	This function is binded to the click event of the save button.
+	The save button is disbaled if the title of the task is empty.
+	The function also returns before excuting if the title is empty in case a user enables the button through the inspection tools in the browser.
+	*/
 	const save = () => {
 		if (disableSubmit) return;
+
+		// Call to the editStore function which edits the value of the task at index 'currTask' with the values of title, description and date.
 		editStore(currTask, title, description, date);
+
+		// Set the value of the tasks item in local storage to the value of the updated store.
 		setStorage($tasks);
 		goto(`/`);
 	};
 
+	/* A function to cancel all changes and go back to the main view */
 	const cancel = () => {
 		goto(`/`);
 	}
@@ -40,7 +61,7 @@
 <svelte:window />
 
 <svelte:head>
-	<title>Sverdle</title>
+	<title>{title}</title>
 	<meta name="description" content="Task Details" />
 </svelte:head>
 
@@ -48,7 +69,7 @@
 	<div class="flex flex-col gap-4">
 		<h1 class="text-2xl">Edit {title}</h1>
 		<input class={INPUT_STYLE} type="text" name="taskName" placeholder="Title" bind:value={title} />
-		<input
+		<textarea
 			class={INPUT_STYLE}
 			type="text"
 			name="Description"
